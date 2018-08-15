@@ -66,7 +66,7 @@ export default class ExtractQueries extends Command {
         task: async ctx => {
           ctx.mapping = {};
           (ctx.operations as Array<{document: string}>).forEach(({ document }) => {
-            ctx.mapping[sha512.update(document).digest('hex')] = document;
+            ctx.mapping[sha512.update(document).hex()] = document;
           });
         },
       },
