@@ -1,6 +1,5 @@
 import 'apollo-codegen-core/lib/polyfills';
 import { Command, flags } from '@oclif/command';
-import { table, styledJSON } from 'heroku-cli-util';
 import * as Listr from 'listr';
 import { print } from 'graphql';
 import { sha512 } from 'js-sha512';
@@ -9,8 +8,6 @@ import * as fs from 'fs';
 import { loadQueryDocuments } from 'apollo-codegen-core/lib/loading';
 
 import { engineFlags } from '../../engine-cli';
-import { ChangeType } from '../../printer/ast';
-import { format } from '../schema/check';
 import { resolveDocumentSets } from '../../config';
 import { loadConfigStep } from '../../load-config';
 
@@ -78,32 +75,6 @@ export default class ExtractQueries extends Command {
       },
     ]);
 
-    return tasks.run().then(async ({ changes }) => {
-      const failures = changes.filter(
-        ({ type }: { type: ChangeType }) => type === ChangeType.FAILURE,
-      );
-      const exit = failures.length > 0 ? 1 : 0;
-      if (flags.json) {
-        await styledJSON({ changes });
-        // exit with failing status if we have failures
-        this.exit(exit);
-      }
-      if (changes.length === 0) {
-        return this.log(
-          '\nNo operations have issues with the current schema\n',
-        );
-      }
-      this.log('\n');
-      table(changes.map(format), {
-        columns: [
-          { key: 'type', label: 'Change' },
-          { key: 'code', label: 'Code' },
-          { key: 'description', label: 'Description' },
-        ],
-      });
-      this.log('\n');
-      // exit with failing status if we have failures
-      this.exit(exit);
-    });
+    return tasks.run();
   }
 }
