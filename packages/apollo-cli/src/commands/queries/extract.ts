@@ -1,8 +1,7 @@
-import 'apollo-codegen-core/lib/polyfills';
 import { Command, flags } from '@oclif/command';
 import * as Listr from 'listr';
 import { print } from 'graphql';
-import { sha512 } from 'js-sha512';
+import * as crypto from 'crypto';
 import * as fs from 'fs';
 
 import { loadQueryDocuments } from 'apollo-codegen-core/lib/loading';
@@ -62,9 +61,16 @@ export default class ExtractQueries extends Command {
         title: 'Generating hashes',
         task: async ctx => {
           ctx.mapping = {};
-          (ctx.operations as Array<{document: string}>).forEach(({ document }) => {
-            ctx.mapping[sha512.update(document).hex()] = document;
-          });
+          (ctx.operations as Array<{ document: string }>).forEach(
+            ({ document }) => {
+              ctx.mapping[
+                crypto
+                  .createHash('sha512')
+                  .update(document)
+                  .digest('hex')
+              ] = document;
+            },
+          );
         },
       },
       {
