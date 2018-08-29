@@ -1,7 +1,6 @@
 import { fs, withGlobalFS } from "./localfs";
 import { stripIndents } from "common-tags";
 import * as fg from "glob";
-import * as path from "path";
 const astTypes = require("ast-types");
 const recast = require("recast");
 
