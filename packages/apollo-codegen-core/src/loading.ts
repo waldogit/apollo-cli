@@ -149,7 +149,7 @@ export function loadQueryDocuments(
         inputPath.endsWith(".tsx") ||
         inputPath.endsWith(".ts")
       ) {
-        let parser = require("recast/parsers/babylon");
+        let parser;
         if (inputPath.endsWith(".ts")) {
           parser = require("recast/parsers/typescript");
         } else if (inputPath.endsWith(".tsx")) {
@@ -161,6 +161,8 @@ export function loadQueryDocuments(
               return babelParser.parse(source, options);
             }
           };
+        } else {
+          parser = require("recast/parsers/babylon");
         }
 
         const doc = extractDocumentFromJavascript(body.toString(), {
