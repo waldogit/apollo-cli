@@ -37,9 +37,6 @@ export default class ExtractQueries extends Command {
       description:
         "Path to your GraphQL queries, can include search tokens like **"
     }),
-    json: flags.boolean({
-      description: "Output result as JSON"
-    }),
     ...engineFlags,
 
     tagName: flags.string({
