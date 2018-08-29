@@ -106,19 +106,18 @@ export function extractDocumentFromJavascript(
     inputPath?: string;
   } = {}
 ): string | null {
-  let tagName = options.tagName || "gql";
-
-  let match;
   let matches: string[] = [];
 
   try {
     matches = extractDocumentsWithAST(content, options);
   } catch (e) {
-    throw new Error(
-      "Extraction using AST" + options.inputPath
-        ? "in file " + options.inputPath
-        : "" + "failed with \n" + e
-    );
+    e.message =
+      "Operation extraction " +
+      (options.inputPath ? "from file " + options.inputPath + " " : "") +
+      "failed with \n" +
+      e.message;
+
+    throw e;
   }
 
   matches = filterValidDocuments(matches);
