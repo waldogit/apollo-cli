@@ -113,19 +113,11 @@ export function extractDocumentFromJavascript(
   try {
     matches = extractDocumentsWithAST(content, options);
   } catch (e) {
-    console.log(
-      "Extraction using AST",
-      options.inputPath ? "in file " + options.inputPath : "",
-      "failed with \n",
-      e,
-      "\nRetrying using regex"
+    throw new Error(
+      "Extraction using AST" + options.inputPath
+        ? "in file " + options.inputPath
+        : "" + "failed with \n" + e
     );
-    const re = new RegExp(tagName + "s*`([^`]*)`", "g");
-    while ((match = re.exec(content))) {
-      const doc = match[1].replace(/\${[^}]*}/g, "");
-
-      matches.push(doc);
-    }
   }
 
   matches = filterValidDocuments(matches);
