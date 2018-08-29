@@ -76,7 +76,7 @@ function extractDocumentsWithAST(
 
   // isolate the template literals tagged with gql
   astTypes.visit(ast, {
-    visitTaggedTemplateExpression: (path: any) => {
+    visitTaggedTemplateExpression(path: any) {
       const tag = path.value.tag;
       if (tag.name === tagName) {
         // This currently ignores the anti-pattern of including an interpolated
@@ -91,6 +91,7 @@ function extractDocumentsWithAST(
             .join("")
         );
       }
+      return this.traverse(path);
     }
   });
 
