@@ -137,9 +137,6 @@ export function loadQueryDocuments(
   tagName: string = "gql"
 ): DocumentNode[] {
   const sources = inputPaths
-    .flatMap(i =>
-      withGlobalFS(() => fg.sync(i, { cwd: process.cwd(), absolute: true }))
-    )
     .map(inputPath => {
       if (fs.lstatSync(inputPath).isDirectory()) {
         return null;

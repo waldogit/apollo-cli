@@ -6,8 +6,10 @@ import * as fs from "fs";
 import { toPromise, execute } from "apollo-link";
 import gql from "graphql-tag";
 import { GraphQLError } from "graphql";
+import * as fg from "glob";
 
 import { loadQueryDocuments } from "apollo-codegen-core/lib/loading";
+import { withGlobalFS } from "apollo-codegen-core/lib/localfs";
 
 import { engineFlags } from "../../engine-cli";
 import { engineLink } from "../../engine";
@@ -57,7 +59,16 @@ export default class RegisterQueries extends Command {
         task: async (ctx, task) => {
           ctx.documentSets = await resolveDocumentSets(ctx.config, false);
           const operations = loadQueryDocuments(
-            flags.queries || ctx.documentSets[0].documentPaths,
+            typeof flags.queries === "string"
+              ? [
+                  withGlobalFS(() =>
+                    fg.sync(flags.queries!, {
+                      cwd: ctx.config.projectFolder,
+                      absolute: true
+                    })
+                  )
+                ]
+              : ctx.documentSets[0].documentPaths,
             flags.tagName
           );
           task.title = `Scanning for GraphQL queries (${
