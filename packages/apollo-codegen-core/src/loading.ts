@@ -1,9 +1,8 @@
 // provides flatMap
 import "./polyfills";
 
-import { fs, withGlobalFS } from "./localfs";
+import { fs } from "./localfs";
 import { stripIndents } from "common-tags";
-import * as fg from "glob";
 const astTypes = require("ast-types");
 const recast = require("recast");
 
